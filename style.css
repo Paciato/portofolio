@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+.profil-img {
+    border-radius: 50%;
+    border: 4px solid #ffff;
+}
+
+header {
+    background: linear-gradient(135deg, #0f2027, #2c5364);
+    padding: 20px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    /* bayangan biar melayang */
+    border-bottom: 3px solid #1abc9c;
+    /* garis hiasan */
+}
+
+header h1 {
+    color: #ecf0f1;
+    font-size: 24px;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ecf0f1;
+    margin: 0 15px;
+    font-weight: 500;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+nav a:hover {
+    color: #1abc9c;
+    border-bottom: 2px solid #1abc9c;
+    padding-bottom: 3px;
+}
+
+.hero {
+    height: 60vh;
+    background: url("banner.jpg") no-repeat center center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* overlay transparan */
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero h2 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.hero-content ul {
+    list-style-position: inside; /* bikin titik mendekat ke teks */
+    text-align: justify; /* teks rata kiri biar rapi */
+    padding-left: 18%; /* hilangkan padding default */
+}
+
+.list-soft-skill ul {
+    padding-left: 6%; /* hilangkan padding default */
+}
+
+.list-non-formal ul {
+    padding-left: 20%; /* hilangkan padding default */
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    background: linear-gradient(135deg, #0f2027, #2c5364);
+    color: #bdc3c7;
+    border-top: 3px solid #1abc9c; /* garis hiasan atas */
+    margin-top: auto;
+    position: relative;
+}
+
+footer a {
+    color: #ffffff; /* default putih */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #1abc9c; /* berubah jadi aksen saat hover */
+    text-decoration: underline; /* opsional biar lebih jelas */
+}
+
+
+.project-card {
+    background: rgba(255, 255, 255, 0.6); /* semi transparan */
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s;
+}
+
+.project-card:hover {
+    transform: scale(1.01);
+}
+
+.project-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.project-card h3 {
+    color: #3498db;
+    margin: 10px 0 5px;
+}
+
+.project-card p {
+    font-size: 14px;
+    color: #000000;
+    font-weight: bold;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 992px) {
+    .hero {
+        height: 50vh;
+    }
+
+    .hero h2 {
+        font-size: 32px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    nav a {
+        margin: 0 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav a {
+        margin: 5px;
+        font-size: 14px;
+    }
+
+    .hero {
+        height: 40vh;
+        padding: 10px;
+    }
+
+    .hero h2 {
+        font-size: 24px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        height: auto;
+        padding: 40px 15px;
+    }
+
+    .hero h2 {
+        font-size: 20px;
+    }
+
+    .hero p {
+        font-size: 13px;
+    }
+
+    nav {
+        flex-direction: column;
+    }
+
+    nav a {
+        display: block;
+        margin: 8px 0;
+    }
+}
