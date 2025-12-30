@@ -1,10 +1,30 @@
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { useState } from "react";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
+import toast from "react-hot-toast";
+
+/* =====================
+   EMAILJS CONFIG
+   ===================== */
+const SERVICE_ID = "service_a3gkett";
+const TEMPLATE_ID = "template_0fe4bij";
+const PUBLIC_KEY = "VodYdSqUuE_MLdsd6";
+
+/* =====================
+   INITIAL STATE
+   ===================== */
+const initialState = {
+  name: "",
+  email: "",
+  title: "",
+  message: "",
+};
 
 const Contact = () => {
   const [copied, setCopied] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText("rkykrnwan@gmail.com");
@@ -12,42 +32,48 @@ const Contact = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    emailjs
-      .send(
-        "service_a3gkett",
-        "template_0fe4bij",
+    // VALIDASI KETAT
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.message.trim()
+    ) {
+      toast.error("Name, email, and message are required");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
         {
-          from_name: formData.name,
-          from_email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          title: formData.title.trim() || "(No Subject)",
+          message: formData.message.trim(),
+          reply_to: formData.email.trim(),
         },
-        "VodYdSqUuE_MLdsd6"
-      )
-      .then(
-        () => {
-          alert("Message sent successfully");
-          setFormData({ name: "", email: "", subject: "", message: "" });
-        },
-        (error) => {
-          console.error(error);
-          alert("Failed to send message");
-        }
+        PUBLIC_KEY
       );
+
+      toast.success("Message sent successfully 🚀");
+      setFormData(initialState);
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast.error("Failed to send message ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,90 +94,78 @@ const Contact = () => {
 
             <p className="text-xl text-gray-500 mb-12 leading-relaxed">
               Have a project in mind or just want to say hi? I'm always open to
-              discussing new projects, creative ideas or opportunities to be
-              part of your visions.
+              discussing new projects or opportunities.
             </p>
 
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4 p-4 rounded-xl bg-[#111827]  border border-indigo-500/40">
-
-                <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500">
-                  <Send className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white">Email Me</h4>
-                  <p onClick={handleCopyEmail} className="text-indigo-300 cursor-pointer select-none transition hover:text-indigo-400">
-                    {copied ? "Email copied ✔" : "rkykrnwan@gmail.com"}
-                  </p>
-
-
-                </div>
+            <div className="flex items-center space-x-4 p-4 rounded-xl bg-[#111827] border border-indigo-500/40">
+              <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                <Send className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-white">Email Me</h4>
+                <p
+                  onClick={handleCopyEmail}
+                  className="text-indigo-300 cursor-pointer select-none hover:text-indigo-400"
+                >
+                  {copied ? "Email copied ✔" : "rkykrnwan@gmail.com"}
+                </p>
               </div>
             </div>
           </motion.div>
 
-          {/* RIGHT FORM (STATIC) */}
+          {/* RIGHT FORM */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="p-8 md:p-10 rounded-3xl bg-black/60 backdrop-blur-xl border border-indigo-500/50 ring-1 ring-white/10 shadow-2xl shadow-black/50"
+            className="p-8 md:p-10 rounded-3xl bg-black/60 backdrop-blur-xl border border-indigo-500/50 ring-1 ring-white/10 shadow-2xl"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-base font-medium text-white mb-2">Name</label>
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="name"
-                  className="w-full h-12 rounded-lg bg-white/5 border border-white/10 px-4 outline-none text-gray-300 focus:border-indigo-500"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </div>
+
+              <Input
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+
+              <Input
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+
+              <Input
+                label="Subject"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
 
               <div>
-                <label className="block text-base font-medium text-white mb-2">Email</label>
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="email"
-                  className="w-full h-12 rounded-lg bg-white/5 border border-white/10 px-4 outline-none text-gray-300 focus:border-indigo-500"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <label className="block text-base font-medium text-white mb-2">Subject</label>
-                <input
-                  name="subject"
-                  type="text"
-                  placeholder="subject"
-                  className="w-full h-12 rounded-lg bg-white/5 border border-white/10 px-4 outline-none text-gray-300 focus:border-indigo-500"
-                  value={formData.subject}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <label className="block text-base font-medium text-white mb-2">Message</label>
+                <label className="block text-base font-medium text-white mb-2">
+                  Message
+                </label>
                 <textarea
                   name="message"
-                  placeholder="Tell me about your project..."
-                  className="w-full min-h-[150px] resize-none rounded-lg bg-white/5 border border-white/10 px-4 py-3 outline-none text-gray-300 focus:border-indigo-500"
                   value={formData.message}
                   onChange={handleChange}
+                  placeholder="Tell me about your project..."
+                  className="w-full min-h-[150px] resize-none rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-gray-300 outline-none focus:border-indigo-500"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full h-12 rounded-xl bg-indigo-600 text-white text-lg font-semibold transition hover:bg-indigo-500"
+                disabled={loading}
+                className="w-full h-12 rounded-xl bg-indigo-600 text-white text-lg font-semibold transition hover:bg-indigo-500 disabled:opacity-50"
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
+
             </form>
           </motion.div>
 
@@ -160,5 +174,23 @@ const Contact = () => {
     </section>
   );
 };
+
+/* =====================
+   REUSABLE INPUT
+   ===================== */
+const Input = ({ label, name, type = "text", value, onChange }) => (
+  <div>
+    <label className="block text-base font-medium text-white mb-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="w-full h-12 rounded-lg bg-white/5 border border-white/10 px-4 text-gray-300 outline-none focus:border-indigo-500"
+    />
+  </div>
+);
 
 export default Contact;
