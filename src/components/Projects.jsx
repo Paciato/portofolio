@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 const projectsData = [
   {
     image: image1,
-    title: "Warehouse Management System",
+    title: "Smart Warehouse Management System (PT SERU)",
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit suscipit beatae saepe ut necessitatibus provident doloribus atque est molestias iusto doloremque deserunt odit ratione aut, ducimus nam, officia eaque quaerat!",
+      "Proyek pengembangan Smart Warehouse Management System (WMS) untuk PT SERU yang dirancang untuk meningkatkan efisiensi operasional gudang FMCG dan distribusi nasional. Sistem ini mencakup proses inbound (scan, QC, dan putaway), outbound (digital picking dan packing), serta manajemen stok real-time berbasis satu sumber data. Dilengkapi dashboard manajerial dan chatbot asisten gudang untuk membantu operator dalam mengecek stok, lokasi barang, dan panduan proses operasional.",
     technologies: ["Laravel", "PHP", "MySQL"],
   },
 
